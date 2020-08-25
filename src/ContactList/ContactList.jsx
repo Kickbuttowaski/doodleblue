@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Table from "./../components/Table/Table";
 import BasicInfo from "../components/BasicInfo/BasicInfo";
 // import { data } from "./../utils/sampledata";
-
+import style from "./ContactList.module.css";
 const tableTemplate = [
   {
     label: "icon",
@@ -85,10 +85,11 @@ class ContactList extends Component {
     loading: false,
   };
   componentDidMount() {
-    fetch("https://api.mocki.io/v1/2e2aef95")
+    fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
       .then((res) => res.json())
       .then((result) => {
-        this.setState({ dbData: result[0] }, () => {
+        console.log(result);
+        this.setState({ dbData: result }, () => {
           this.formatData();
         });
       });
@@ -97,6 +98,7 @@ class ContactList extends Component {
     const { dbData } = this.state;
     let formattedData = dbData.map((data) => {
       return {
+        id: { value: data.id },
         fname: {
           value: data.first_name,
           label: (
@@ -123,14 +125,26 @@ class ContactList extends Component {
   };
   render() {
     const { dbData, formattedData, loading } = this.state;
-
     return loading ? (
-      <div style={{ width: "700px" }}>
+      <div className={style["container"]}>
+        <div className={style["container_header"]}>
+          <div className={style["container_header--left"]}>
+            <div>ICON</div>
+            <div>
+              <h2>Contacts</h2>
+              <p>Welcome to flatCRM page</p>
+            </div>
+          </div>
+          <div>
+            <label>Sort by:</label>
+            <p>Date created</p>
+          </div>
+        </div>
+        <div className={style['container_subheader']}>
+            <div>Search bar</div>
+            <div>Button</div>
+        </div>
         <Table dbData={formattedData} tableData={tableTemplate} />
-        {/* <BasicInfo
-          name={tempData[0].fname["value"]}
-          email={tempData[0].email}
-        /> */}
       </div>
     ) : (
       <div>Loading...</div>
@@ -139,3 +153,4 @@ class ContactList extends Component {
 }
 
 export default ContactList;
+// style={{ width: "700px" }}

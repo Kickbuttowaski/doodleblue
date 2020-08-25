@@ -1,0 +1,20 @@
+* {
+  margin: 0px;
+}
+.container_header--left {
+  display: flex;
+  align-items: center;
+}
+.container_header--left p{
+    font-size: 12px;
+}
+.container_header{
+    display: flex;
+    width: 500px;
+    justify-content: space-between;
+}
+.container_subheader{
+    display: flex;
+    justify-content: space-between;
+    width: 500px;
+}

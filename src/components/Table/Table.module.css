@@ -1,10 +1,26 @@
-.table_container  th {
+.table_container th {
   height: 40px;
   font-weight: 600;
 }
-.table_container  thead {
+.table_container thead {
   background: #efefef;
 }
-.table_container table{
-    border-collapse: collapse;
+.table_container table {
+  border-collapse: collapse;
+}
+.table_container td {
+  padding: 4px;
+}
+.table_container thead,
+tbody {
+  width: 100%;
+  /* display: table;
+  table-layout: fixed; */
+  border-collapse: collapse;
+}
+.table_container tr {
+  cursor: pointer;
+}
+.table_container tr:hover {
+  background: #efefef;
 }
