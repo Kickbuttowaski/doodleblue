@@ -1,0 +1,10 @@
+.table_container  th {
+  height: 40px;
+  font-weight: 600;
+}
+.table_container  thead {
+  background: #efefef;
+}
+.table_container table{
+    border-collapse: collapse;
+}

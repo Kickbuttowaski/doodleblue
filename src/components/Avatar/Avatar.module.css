@@ -1,0 +1,24 @@
+*,*::after,*::before,*:active{
+    outline: none;
+    box-sizing: border-box;
+  }
+.avatar {
+    background-size: cover;
+    background-position: top center;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+.avatar-img {
+  background-size: cover;
+  background-position: top center;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 10px;
+  text-align: center;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
