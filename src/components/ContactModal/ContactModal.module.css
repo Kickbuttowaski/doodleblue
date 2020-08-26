@@ -41,3 +41,13 @@
   border: 1px solid;
   padding: 8px;
 }
+.modal button {
+  background-image: linear-gradient(to right, #ff866e, #fb669f);
+  border: 0px;
+  border-radius: 4px;
+  color: #fff;
+  height: 32px;
+  box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.06);
+  font-size: 14px;
+  padding:0px 20px;
+}

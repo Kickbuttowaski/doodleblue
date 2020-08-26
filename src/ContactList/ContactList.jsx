@@ -197,7 +197,6 @@ class ContactList extends Component {
         this.formatData();
       });
     } else {
-      console.log(data);
       let newId = idGenerator(this.state.contactIds);
       let dbData = Object.assign({}, this.state.dbData, {
         [newId]: Object.assign(data, { id: newId }),

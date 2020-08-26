@@ -3,7 +3,7 @@
   font-weight: 600;
 }
 .table_container thead {
-  background: #efefef;
+  background: #f1f1f1;
 }
 .table_container table {
   border-collapse: collapse;
@@ -22,5 +22,5 @@ tbody {
   cursor: pointer;
 }
 .table_container tr:hover {
-  background: #efefef;
+  background: #e8ecef;
 }
