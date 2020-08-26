@@ -11,14 +11,16 @@ class Table extends Component {
     const { tableData } = this.state;
     return tableData.map((data, i) => {
       return (
-        <th style={{ width: data.width }} key={i}>
+        <th style={{ width: data.width }} key={"th" + i}>
           {data.label}
         </th>
       );
     });
   };
   handleRowClick = (data) => {
-    //console.log(data);
+    const { handleRowData } = this.props;
+
+    handleRowData && handleRowData(data);
   };
 
   componentDidMount() {
@@ -35,8 +37,7 @@ class Table extends Component {
     );
   }
   componentDidUpdate(prevProps, prevState) {
-    const { dbData, sortOrder } = this.props;
-
+    const { dbData, sortOrder, tableData } = this.props;
     if (!_.isEqual(dbData, prevProps.dbData)) {
       this.setState({ dbData });
     }
@@ -48,17 +49,20 @@ class Table extends Component {
         dbData: _.orderBy(dbData, `${sortOrder.path}.value`, sortOrder.order),
       });
     }
+    if (tableData.length != prevProps.tableData.length) {
+      this.setState({ tableData });
+    }
   }
   generateBody = () => {
     const { dbData, tableData } = this.state;
     return dbData.map((data, i) => {
       return (
-        <tr key={i + data.name}>
-          {tableData.map(({ value, label, width, i }) => {
+        <tr key={"tr"+i}>
+          {tableData.map(({ value, label, width,  },i) => {
             if (value !== "checkbox" && "label" in data[value]) {
               return (
                 <td
-                  onClick={() => {
+                  onClick={(e) => {
                     this.handleRowClick(data["id"]["value"]);
                   }}
                   style={{ width: width }}
@@ -70,11 +74,11 @@ class Table extends Component {
               if (value === "checkbox") {
                 return (
                   <td
-                    onClick={() => {
+                    onClick={(e) => {
                       this.handleRowClick(data["id"]["value"]);
                     }}
                     style={{ width: width }}
-                    key={i + value}
+                    key={"td" + i}
                   >
                     {<input type="checkbox" />}
                   </td>
@@ -82,11 +86,11 @@ class Table extends Component {
               } else {
                 return (
                   <td
-                    onClick={() => {
+                    onClick={(e) => {
                       this.handleRowClick(data["id"]["value"]);
                     }}
                     style={{ width: width }}
-                    key={i + value}
+                    key={"td" + i}
                   >
                     {data[value]["value"]}
                   </td>

@@ -6,90 +6,7 @@ import style from "./ContactList.module.css";
 import ContactModal from "./../components/ContactModal/ContactModal";
 import { idGenerator, dataFormatter } from "../utils";
 import _ from "lodash";
-const tableTemplate = [
-  {
-    label: "icon",
-    value: "checkbox",
-    width: "5%",
-  },
-  {
-    label: "Basic Info",
-    value: "fname",
-    width: "20%",
-  },
-  {
-    label: "Company",
-    value: "company",
-    width: "20%",
-  },
-  {
-    label: "",
-    value: "edit",
-    width: "5%",
-  },
-  {
-    label: "",
-    value: "delete",
-    width: "5%",
-  },
-];
-const tempData = [
-  {
-    fname: { value: "Jake" },
-    lname: { value: "Jake" },
-    email: "jake@gmail.com",
-    phone: "9710644621",
-    company: { value: "infosys" },
-    address1: "sampel line 1",
-    address2: "sampel line 1",
-    city: "Chennai",
-    country: "India",
-  },
-  {
-    fname: { value: "Amy" },
-    lname: { value: "Jake" },
-    email: "amy96@gmail.com",
-    phone: "9710644621",
-    company: { value: "tcs" },
-    address1: "sampel line 1",
-    address2: "sampel line 1",
-    city: "Chennai",
-    country: "India",
-  },
-  {
-    fname: { value: "Peralta" },
-    lname: { value: "Jake" },
-    email: "peralta@gmail.com",
-    phone: "9710644621",
-    company: { value: "zen mode" },
-    address1: "sampel line 1",
-    address2: "sampel line 1",
-    city: "Chennai",
-    country: "India",
-  },
-  {
-    fname: { value: "Santiago" },
-    lname: { value: "Jake" },
-    email: "santiago96@gmail.com",
-    phone: "9710644621",
-    company: { value: "brooklyn99" },
-    address1: "sampel line 1",
-    address2: "sampel line 1",
-    city: "Chennai",
-    country: "India",
-  },
-  {
-    fname: { value: "Hitchcock" },
-    lname: { value: "Jake" },
-    email: "hitchkok96@gmail.com",
-    phone: "9710644621",
-    company: { value: "brooklyn93" },
-    address1: "sampel line 1",
-    address2: "sampel line 1",
-    city: "Chennai",
-    country: "India",
-  },
-];
+import DetailView from "../components/DetailView/DetailView";
 
 class ContactList extends Component {
   state = {
@@ -98,11 +15,12 @@ class ContactList extends Component {
     loading: false,
     modalState: false,
     contactIds: [],
-    editData: "",
+
     type: "create",
     searchValue: "",
     showDropDown: false,
     sortOrder: { path: "fname", order: "asc" },
+    showDetailView: false,
   };
   componentDidMount() {
     fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
@@ -114,6 +32,7 @@ class ContactList extends Component {
             contactIds: result.map((data) => data.id),
           },
           () => {
+            this.handleTableTemplate();
             this.formatData();
           }
         );
@@ -123,6 +42,61 @@ class ContactList extends Component {
     this.setState({
       searchValue: data,
     });
+  };
+  handleTableTemplate = (type) => {
+    console.log(type);
+    if (type === "edit") {
+      console.log("in");
+      this.tableTemplate = [
+        {
+          label: (
+            <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
+          ),
+          value: "checkbox",
+          width: "5%",
+        },
+        {
+          label: "Basic Info",
+          value: "fname",
+          width: "15%",
+        },
+        {
+          label: "Company",
+          value: "company",
+          width: "15%",
+        },
+      ];
+    } else {
+      this.tableTemplate = [
+        {
+          label: (
+            <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
+          ),
+          value: "checkbox",
+          width: "5%",
+        },
+        {
+          label: "Basic Info",
+          value: "fname",
+          width: "15%",
+        },
+        {
+          label: "Company",
+          value: "company",
+          width: "15%",
+        },
+        {
+          label: "",
+          value: "edit",
+          width: "5%",
+        },
+        {
+          label: "",
+          value: "delete",
+          width: "5%",
+        },
+      ];
+    }
   };
   renderDropDown = () => {
     const { dbData, contactIds, searchValue } = this.state;
@@ -134,8 +108,9 @@ class ContactList extends Component {
       ) {
         returnData.push(
           <div
-            onClick={() => {
-              console.log(dbData[id].id);
+            style={{ cursor: "pointer" }}
+            onClick={(e) => {
+              this.handleRowData(dbData[id].id);
             }}
           >
             <BasicInfo
@@ -147,11 +122,6 @@ class ContactList extends Component {
         );
       }
     });
-    // let returnData = contactIds.map((id) => {
-    //   if (dbData[id].first_name.toLowerCase().startsWith(searchValue)) {
-    //     return <div>{dbData[id].first_name}</div>;
-    //   }
-    // });
 
     return returnData;
   };
@@ -165,10 +135,10 @@ class ContactList extends Component {
       this.formatData();
     });
   };
-  handleEdit = (id) => {
+  handleEdit = (id, event) => {
     const { dbData } = this.state;
     this.selectedId = id;
-    this.setState({ modalState: true, editData: dbData[id], type: "edit" });
+    this.setState({ modalState: true, type: "edit" });
   };
   formatData = () => {
     const { dbData, contactIds } = this.state;
@@ -197,8 +167,9 @@ class ContactList extends Component {
         edit: {
           value: (
             <span
-              onClick={() => {
-                this.handleEdit(data.id);
+              onClick={(e) => {
+                e.stopPropagation();
+                this.handleEdit(data.id, e);
               }}
             >
               <Icon>create</Icon>
@@ -208,7 +179,8 @@ class ContactList extends Component {
         delete: {
           value: (
             <span
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 this.handleDelete(data.id);
               }}
             >
@@ -265,6 +237,11 @@ class ContactList extends Component {
     }
     this.setState({ sortOrder: newSortOrder });
   };
+  handleRowData = (id) => {
+    this.selectedId = id;
+    this.handleTableTemplate("edit");
+    this.setState({ showDetailView: true });
+  };
   render() {
     const {
       dbData,
@@ -272,12 +249,11 @@ class ContactList extends Component {
       loading,
       modalState,
       type,
-      editData,
       showDropDown,
       searchValue,
       sortOrder,
+      showDetailView,
     } = this.state;
-
     let dropDownData = this.renderDropDown();
     if (dropDownData.length <= 0 && searchValue.length > 0) {
       dropDownData = (
@@ -294,73 +270,86 @@ class ContactList extends Component {
     }
     return loading ? (
       <div className={style["container"]}>
+        {showDetailView && (
+          <DetailView
+            data={dbData[this.selectedId]}
+            show={showDetailView}
+            handleClose={() => {
+              this.handleTableTemplate();
+              this.setState({ showDetailView: false });
+            }}
+          />
+        )}
         {modalState && (
           <ContactModal
             handleContactModal={this.handleContactModal}
             updateData={this.updateData}
             type={type}
-            data={editData}
+            data={dbData[this.selectedId]}
           />
         )}
-        <div className={style["container_header"]}>
-          <div className={style["container_header--left"]}>
-            <div>
-              <Icon style={{ fontSize: "32px" }}>contact_page</Icon>
+        <div className={style["top_section"]}>
+          <div className={style["container_header"]}>
+            <div className={style["container_header--left"]}>
+              <div>
+                <Icon style={{ fontSize: "32px" }}>contact_page</Icon>
+              </div>
+              <div>
+                <h2>Contacts</h2>
+                <p>Welcome to flatCRM page</p>
+              </div>
+            </div>
+            <div className={style["container_header--right"]}>
+              <label>Sort by:</label>
+              <select
+                onChange={(e) => {
+                  this.handleSortDropdown(e.currentTarget.value);
+                }}
+              >
+                <option value="fname">Name</option>
+                <option value="company">Company</option>
+              </select>
+            </div>
+          </div>
+          <div className={style["container_subheader"]}>
+            <div style={{ position: "relative", width: "240px" }}>
+              <input
+                onFocus={() => {
+                  this.setState({ showDropDown: true });
+                }}
+                onBlur={() => {
+                  this.setState({ showDropDown: false });
+                }}
+                type="text"
+                placeholder="Search contacts"
+                onChange={(e) => {
+                  this.handleSearch(e.currentTarget.value);
+                }}
+              />
+              {searchValue.trim().length > 0 && (
+                <div className={style["dropdown_options"]}>{dropDownData}</div>
+              )}
+              <span className={style["input_icon"]}>
+                <Icon>search</Icon>
+              </span>
             </div>
             <div>
-              <h2>Contacts</h2>
-              <p>Welcome to flatCRM page</p>
+              <button
+                onClick={() => {
+                  this.handleContactModal("create");
+                }}
+              >
+                + Add Contact
+              </button>
             </div>
           </div>
-          <div className={style["container_header--right"]}>
-            <label>Sort by:</label>
-            <select
-              onChange={(e) => {
-                this.handleSortDropdown(e.currentTarget.value);
-              }}
-            >
-              <option value="fname">Name</option>
-              <option value="company">Company</option>
-            </select>
-          </div>
         </div>
-        <div className={style["container_subheader"]}>
-          <div style={{ position: "relative", width: "240px" }}>
-            <input
-              onFocus={() => {
-                this.setState({ showDropDown: true });
-              }}
-              onBlur={() => {
-                this.setState({ showDropDown: false });
-              }}
-              type="text"
-              placeholder="Search contacts"
-              onChange={(e) => {
-                this.handleSearch(e.currentTarget.value);
-              }}
-            />
-            {showDropDown && (
-              <div className={style["dropdown_options"]}>{dropDownData}</div>
-            )}
-            <span className={style["input_icon"]}>
-              <Icon>search</Icon>
-            </span>
-          </div>
-          <div>
-            <button
-              onClick={() => {
-                this.handleContactModal("create");
-              }}
-            >
-              + Add Contact
-            </button>
-          </div>
-        </div>
-        <div style={{ maxWidth: "700px" }}>
+        <div className={style["tabel_container"]}>
           <Table
             sortOrder={sortOrder}
             dbData={formattedData}
-            tableData={tableTemplate}
+            tableData={this.tableTemplate}
+            handleRowData={this.handleRowData}
           />
         </div>
       </div>

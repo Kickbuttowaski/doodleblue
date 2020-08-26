@@ -19,6 +19,7 @@ class Avatar extends React.PureComponent {
   }
   returnNode() {
     const { text, size } = this.props;
+
     return (
       <div
         className={style["avatar"]}
