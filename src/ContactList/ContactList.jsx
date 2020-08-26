@@ -4,7 +4,7 @@ import BasicInfo from "../components/BasicInfo/BasicInfo";
 import Icon from "@material-ui/core/Icon";
 import style from "./ContactList.module.css";
 import ContactModal from "./../components/ContactModal/ContactModal";
-
+import { idGenerator, dataFormatter } from "../utils";
 const tableTemplate = [
   {
     label: "icon",
@@ -20,6 +20,16 @@ const tableTemplate = [
     label: "Company",
     value: "company",
     width: "20%",
+  },
+  {
+    label: "",
+    value: "edit",
+    width: "5%",
+  },
+  {
+    label: "",
+    value: "delete",
+    width: "5%",
   },
 ];
 const tempData = [
@@ -86,20 +96,30 @@ class ContactList extends Component {
     formattedData: "",
     loading: false,
     modalState: false,
+    contactIds: [],
   };
   componentDidMount() {
     fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
       .then((res) => res.json())
       .then((result) => {
-        console.log(result);
-        this.setState({ dbData: result }, () => {
-          this.formatData();
-        });
+        this.setState(
+          {
+            dbData: dataFormatter(result),
+            contactIds: result.map((data) => data.id),
+          },
+          () => {
+            this.formatData();
+          }
+        );
       });
   }
+  handleDelete = (data) => {
+    console.log(data);
+  };
   formatData = () => {
-    const { dbData } = this.state;
-    let formattedData = dbData.map((data) => {
+    const { dbData, contactIds } = this.state;
+    let formattedData = contactIds.map((ids) => {
+      let data = dbData[ids];
       return {
         id: { value: data.id },
         fname: {
@@ -120,6 +140,28 @@ class ContactList extends Component {
         address2: data.address2,
         city: data.city,
         country: data.country,
+        edit: {
+          value: (
+            <span
+              onClick={() => {
+                this.handleDelete(data.id);
+              }}
+            >
+              <Icon>create</Icon>
+            </span>
+          ),
+        },
+        delete: {
+          value: (
+            <span
+              onClick={() => {
+                this.handleDelete(data.id);
+              }}
+            >
+              <Icon>delete</Icon>
+            </span>
+          ),
+        },
       };
     });
     this.setState({ formattedData }, () => {
@@ -127,18 +169,34 @@ class ContactList extends Component {
     });
   };
   handleContactModal = (type) => {
-      if(type === "close"){
-        this.setState({ modalState: false });
-      }else{
-        this.setState({ modalState: true });
-      }
-    
+    if (type === "close") {
+      this.setState({ modalState: false });
+    } else {
+      this.setState({ modalState: true });
+    }
+  };
+  updateData = (data) => {
+    //const { contactIds } = this.state;
+    let newId = idGenerator(this.state.contactIds);
+    let dbData = Object.assign({}, this.state.dbData, {
+      [newId]: Object.assign(data, { id: newId }),
+    });
+    let contactIds = [...this.state.contactIds];
+    contactIds.push(newId);
+    this.setState({ dbData, contactIds }, () => {
+      this.formatData();
+    });
   };
   render() {
     const { dbData, formattedData, loading, modalState } = this.state;
     return loading ? (
       <div className={style["container"]}>
-        {modalState && <ContactModal handleContactModal={this.handleContactModal}/>}
+        {modalState && (
+          <ContactModal
+            handleContactModal={this.handleContactModal}
+            updateData={this.updateData}
+          />
+        )}
         <div className={style["container_header"]}>
           <div className={style["container_header--left"]}>
             <div>

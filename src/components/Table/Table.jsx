@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import style from "./Table.module.css";
-
+import Icon from "@material-ui/core/Icon";
 class Table extends Component {
   state = {};
 
@@ -15,7 +15,7 @@ class Table extends Component {
     });
   };
   handleRowClick = (data) => {
-    console.log(data);
+    //console.log(data);
   };
   generateBody = () => {
     const { dbData, tableData } = this.props;

@@ -48,5 +48,21 @@ export const data = [
     address2: "sampel line 1",
     city: "Chennai",
     country: "India",
-  }
+  },
 ];
+
+export const idGenerator = (parent) => {
+  var randomNumber = Math.floor(Math.random() * 500);
+  if (randomNumber in parent) {
+    idGenerator(parent);
+  } else {
+    return randomNumber;
+  }
+};
+
+export const dataFormatter = (data) => {
+  let arrayData = data.map((data) => {
+    return { [data.id]: data };
+  });
+  return Object.assign({}, ...arrayData);
+};
