@@ -16,7 +16,12 @@ class ContactModal extends Component {
       country: "",
     },
   };
-
+  componentDidMount() {
+    const { data, type } = this.props;
+    if (type === "edit") {
+      this.setState({ payload: Object.assign({}, this.state.payload, data) });
+    }
+  }
   handleUserInput = (type, data) => {
     this.setState({
       payload: Object.assign({}, this.state.payload, { [type]: data }),
@@ -25,11 +30,11 @@ class ContactModal extends Component {
 
   handleSubmit = () => {
     const { payload } = this.state;
-    const { updateData } = this.props;
-    updateData(payload);
+    const { updateData, type = "create" } = this.props;
+    updateData(payload, type);
   };
   render() {
-    const { handleContactModal } = this.props;
+    const { handleContactModal, type } = this.props;
     const {
       first_name,
       last_name,
@@ -165,7 +170,9 @@ class ContactModal extends Component {
           </div>
           <div style={{ width: "100%" }}>
             <center>
-              <button onClick={this.handleSubmit}>Create</button>
+              <button onClick={this.handleSubmit}>
+                {type === "edit" ? "Update" : "Create"}
+              </button>
             </center>
           </div>
         </div>

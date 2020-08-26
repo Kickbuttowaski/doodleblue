@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import style from "./Table.module.css";
 import Icon from "@material-ui/core/Icon";
+import _ from "lodash";
 class Table extends Component {
-  state = {};
+  state = {
+    loading: false,
+  };
 
   generateHeader = () => {
-    const { tableData } = this.props;
+    const { tableData } = this.state;
     return tableData.map((data, i) => {
       return (
         <th style={{ width: data.width }} key={i}>
@@ -17,8 +20,24 @@ class Table extends Component {
   handleRowClick = (data) => {
     //console.log(data);
   };
-  generateBody = () => {
+  componentDidMount() {
     const { dbData, tableData } = this.props;
+    this.setState({ dbData, tableData }, () => {
+      this.setState({ loading: true });
+    });
+  }
+  componentDidUpdate(prevProps, prevState) {
+    const { dbData } = this.props;
+    
+    if (!_.isEqual(dbData, prevProps.dbData)) {
+      this.setState({ dbData });
+    }
+    if(dbData.length > prevProps.dbData.length){
+        this.setState({ dbData });
+    }
+  }
+  generateBody = () => {
+    const { dbData, tableData } = this.state;
     return dbData.map((data, i) => {
       return (
         <tr key={i + data.name}>
@@ -68,14 +87,15 @@ class Table extends Component {
   };
   render() {
     const { dbData, tableData } = this.props;
-    return (
+    const {loading} = this.state;
+    return loading?(
       <div className={style["table_container"]}>
         <table>
           <thead>{this.generateHeader()}</thead>
           <tbody>{this.generateBody()}</tbody>
         </table>
       </div>
-    );
+    ):<div>loading..</div>;
   }
 }
 

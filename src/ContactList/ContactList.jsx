@@ -97,6 +97,8 @@ class ContactList extends Component {
     loading: false,
     modalState: false,
     contactIds: [],
+    editData: "",
+    type: "create",
   };
   componentDidMount() {
     fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
@@ -113,8 +115,20 @@ class ContactList extends Component {
         );
       });
   }
-  handleDelete = (data) => {
-    console.log(data);
+  handleDelete = (id) => {
+    let contactIds = this.state.contactIds.filter((data) => {
+      return data !== id;
+    });
+    let dbData = { ...this.state.dbData };
+    delete dbData[id];
+    this.setState({ dbData, contactIds, modalState: false }, () => {
+      this.formatData();
+    });
+  };
+  handleEdit = (id) => {
+    const { dbData } = this.state;
+    this.selectedId = id;
+    this.setState({ modalState: true, editData: dbData[id], type: "edit" });
   };
   formatData = () => {
     const { dbData, contactIds } = this.state;
@@ -144,7 +158,7 @@ class ContactList extends Component {
           value: (
             <span
               onClick={() => {
-                this.handleDelete(data.id);
+                this.handleEdit(data.id);
               }}
             >
               <Icon>create</Icon>
@@ -165,36 +179,53 @@ class ContactList extends Component {
       };
     });
     this.setState({ formattedData }, () => {
-      this.setState({ loading: true });
+      this.setState({ loading: true, modalState: false });
     });
   };
   handleContactModal = (type) => {
     if (type === "close") {
       this.setState({ modalState: false });
     } else {
-      this.setState({ modalState: true });
+      this.setState({ modalState: true, type: "create" });
     }
   };
-  updateData = (data) => {
-    //const { contactIds } = this.state;
-    let newId = idGenerator(this.state.contactIds);
-    let dbData = Object.assign({}, this.state.dbData, {
-      [newId]: Object.assign(data, { id: newId }),
-    });
-    let contactIds = [...this.state.contactIds];
-    contactIds.push(newId);
-    this.setState({ dbData, contactIds }, () => {
-      this.formatData();
-    });
+  updateData = (data, type) => {
+    if (type === "edit") {
+      let dbData = { ...this.state.dbData };
+      dbData[this.selectedId] = data;
+      this.setState({ dbData, modalState: false }, () => {
+        this.formatData();
+      });
+    } else {
+      console.log(data);
+      let newId = idGenerator(this.state.contactIds);
+      let dbData = Object.assign({}, this.state.dbData, {
+        [newId]: Object.assign(data, { id: newId }),
+      });
+      let contactIds = [...this.state.contactIds];
+      contactIds.push(newId);
+      this.setState({ dbData, contactIds }, () => {
+        this.formatData();
+      });
+    }
   };
   render() {
-    const { dbData, formattedData, loading, modalState } = this.state;
+    const {
+      dbData,
+      formattedData,
+      loading,
+      modalState,
+      type,
+      editData,
+    } = this.state;
     return loading ? (
       <div className={style["container"]}>
         {modalState && (
           <ContactModal
             handleContactModal={this.handleContactModal}
             updateData={this.updateData}
+            type={type}
+            data={editData}
           />
         )}
         <div className={style["container_header"]}>
