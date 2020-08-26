@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import Table from "./../components/Table/Table";
 import BasicInfo from "../components/BasicInfo/BasicInfo";
-// import { data } from "./../utils/sampledata";
+import Icon from "@material-ui/core/Icon";
 import style from "./ContactList.module.css";
+import ContactModal from "./../components/ContactModal/ContactModal";
+
 const tableTemplate = [
   {
     label: "icon",
@@ -83,6 +85,7 @@ class ContactList extends Component {
     dbData: "",
     formattedData: "",
     loading: false,
+    modalState: false,
   };
   componentDidMount() {
     fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
@@ -123,26 +126,55 @@ class ContactList extends Component {
       this.setState({ loading: true });
     });
   };
+  handleContactModal = (type) => {
+      if(type === "close"){
+        this.setState({ modalState: false });
+      }else{
+        this.setState({ modalState: true });
+      }
+    
+  };
   render() {
-    const { dbData, formattedData, loading } = this.state;
+    const { dbData, formattedData, loading, modalState } = this.state;
     return loading ? (
       <div className={style["container"]}>
+        {modalState && <ContactModal handleContactModal={this.handleContactModal}/>}
         <div className={style["container_header"]}>
           <div className={style["container_header--left"]}>
-            <div>ICON</div>
+            <div>
+              <Icon style={{ fontSize: "32px" }}>contact_page</Icon>
+            </div>
             <div>
               <h2>Contacts</h2>
               <p>Welcome to flatCRM page</p>
             </div>
           </div>
-          <div>
+          <div className={style["container_header--right"]}>
             <label>Sort by:</label>
-            <p>Date created</p>
+            <select name="cars" id="cars">
+              <option value="volvo">Volvo</option>
+              <option value="saab">Saab</option>
+              <option value="opel">Opel</option>
+              <option value="audi">Audi</option>
+            </select>
           </div>
         </div>
-        <div className={style['container_subheader']}>
-            <div>Search bar</div>
-            <div>Button</div>
+        <div className={style["container_subheader"]}>
+          <div style={{ position: "relative", width: "240px" }}>
+            <input type="text" placeholder="Search contacts" />
+            <span className={style["input_icon"]}>
+              <Icon>search</Icon>
+            </span>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                this.handleContactModal("create");
+              }}
+            >
+              + Add Contact
+            </button>
+          </div>
         </div>
         <Table dbData={formattedData} tableData={tableTemplate} />
       </div>

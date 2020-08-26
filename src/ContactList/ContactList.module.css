@@ -5,16 +5,37 @@
   display: flex;
   align-items: center;
 }
-.container_header--left p{
-    font-size: 12px;
+.container_header--left p {
+  font-size: 12px;
 }
-.container_header{
-    display: flex;
-    width: 500px;
-    justify-content: space-between;
+.container_header {
+  display: flex;
+  max-width: 500px;
+  justify-content: space-between;
 }
-.container_subheader{
-    display: flex;
-    justify-content: space-between;
-    width: 500px;
+.container_subheader {
+  display: flex;
+  justify-content: space-between;
+  max-width: 500px;
+}
+.container_header--right select {
+  border: 0px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.container_subheader input{
+    height: 32px;
+    border-radius: 40px;
+    border: 0px;
+    background: #efefef;
+    padding:0px 32px 0px 8px;
+    width: 100%;
+}
+.input_icon{
+    position: absolute;
+    right: 5px;
+    bottom: 0px;
+}
+.container_subheader button{
+    
 }
