@@ -20,20 +20,33 @@ class Table extends Component {
   handleRowClick = (data) => {
     //console.log(data);
   };
+
   componentDidMount() {
-    const { dbData, tableData } = this.props;
-    this.setState({ dbData, tableData }, () => {
-      this.setState({ loading: true });
-    });
+    const { dbData, tableData, sortOrder } = this.props;
+
+    this.setState(
+      {
+        dbData: _.orderBy(dbData, `${sortOrder.path}.value`, sortOrder.order),
+        tableData,
+      },
+      () => {
+        this.setState({ loading: true });
+      }
+    );
   }
   componentDidUpdate(prevProps, prevState) {
-    const { dbData } = this.props;
-    
+    const { dbData, sortOrder } = this.props;
+
     if (!_.isEqual(dbData, prevProps.dbData)) {
       this.setState({ dbData });
     }
-    if(dbData.length > prevProps.dbData.length){
-        this.setState({ dbData });
+    if (dbData.length > prevProps.dbData.length) {
+      this.setState({ dbData });
+    }
+    if (!_.isEqual(sortOrder, prevProps.sortOrder)) {
+      this.setState({
+        dbData: _.orderBy(dbData, `${sortOrder.path}.value`, sortOrder.order),
+      });
     }
   }
   generateBody = () => {
@@ -87,15 +100,17 @@ class Table extends Component {
   };
   render() {
     const { dbData, tableData } = this.props;
-    const {loading} = this.state;
-    return loading?(
+    const { loading } = this.state;
+    return loading ? (
       <div className={style["table_container"]}>
         <table>
           <thead>{this.generateHeader()}</thead>
           <tbody>{this.generateBody()}</tbody>
         </table>
       </div>
-    ):<div>loading..</div>;
+    ) : (
+      <div>loading..</div>
+    );
   }
 }
 

@@ -12,11 +12,13 @@
   display: flex;
   max-width: 500px;
   justify-content: space-between;
+  margin-bottom: 32px;
 }
 .container_subheader {
   display: flex;
   justify-content: space-between;
   max-width: 500px;
+  margin-bottom: 32px;
 }
 .container_header--right select {
   border: 0px;
@@ -44,5 +46,20 @@
   height: 32px;
   box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.06);
   font-size: 14px;
-  padding:0px 8px;
+  padding: 0px 8px;
+  cursor: pointer;
+}
+.dropdown_options {
+  background: #fff;
+  position: absolute;
+  padding: 8px 0px;
+  width: 100%;
+  box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.06);
+  border-radius: 4px;
+  border: 1px solid #efefef;
+}
+.dropdown_options--message {
+  font-size: 14px;
+  color: #696969;
+  padding: 0px 8px;
 }

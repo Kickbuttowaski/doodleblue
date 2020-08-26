@@ -5,6 +5,7 @@ import Icon from "@material-ui/core/Icon";
 import style from "./ContactList.module.css";
 import ContactModal from "./../components/ContactModal/ContactModal";
 import { idGenerator, dataFormatter } from "../utils";
+import _ from "lodash";
 const tableTemplate = [
   {
     label: "icon",
@@ -99,6 +100,9 @@ class ContactList extends Component {
     contactIds: [],
     editData: "",
     type: "create",
+    searchValue: "",
+    showDropDown: false,
+    sortOrder: { path: "fname", order: "asc" },
   };
   componentDidMount() {
     fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
@@ -115,6 +119,42 @@ class ContactList extends Component {
         );
       });
   }
+  handleSearch = (data) => {
+    this.setState({
+      searchValue: data,
+    });
+  };
+  renderDropDown = () => {
+    const { dbData, contactIds, searchValue } = this.state;
+    let returnData = [];
+    contactIds.forEach((id) => {
+      if (
+        searchValue.length > 0 &&
+        dbData[id].first_name.toLowerCase().includes(searchValue)
+      ) {
+        returnData.push(
+          <div
+            onClick={() => {
+              console.log(dbData[id].id);
+            }}
+          >
+            <BasicInfo
+              size="32px"
+              fname={dbData[id].first_name}
+              email={dbData[id].email}
+            />
+          </div>
+        );
+      }
+    });
+    // let returnData = contactIds.map((id) => {
+    //   if (dbData[id].first_name.toLowerCase().startsWith(searchValue)) {
+    //     return <div>{dbData[id].first_name}</div>;
+    //   }
+    // });
+
+    return returnData;
+  };
   handleDelete = (id) => {
     let contactIds = this.state.contactIds.filter((data) => {
       return data !== id;
@@ -208,6 +248,23 @@ class ContactList extends Component {
       });
     }
   };
+  handleSortDropdown = (data) => {
+    const { sortOrder } = this.state;
+
+    var newSortOrder = "";
+    if (sortOrder.path === data) {
+      newSortOrder = {
+        path: data,
+        order: sortOrder.order === "asc" ? "desc" : "asc",
+      };
+    } else {
+      newSortOrder = {
+        path: data,
+        order: "asc",
+      };
+    }
+    this.setState({ sortOrder: newSortOrder });
+  };
   render() {
     const {
       dbData,
@@ -216,7 +273,25 @@ class ContactList extends Component {
       modalState,
       type,
       editData,
+      showDropDown,
+      searchValue,
+      sortOrder,
     } = this.state;
+
+    let dropDownData = this.renderDropDown();
+    if (dropDownData.length <= 0 && searchValue.length > 0) {
+      dropDownData = (
+        <div className={style["dropdown_options--message"]}>
+          Oops, No contact found
+        </div>
+      );
+    } else if (dropDownData.length <= 0) {
+      dropDownData = (
+        <div className={style["dropdown_options--message"]}>
+          Type to start searching..
+        </div>
+      );
+    }
     return loading ? (
       <div className={style["container"]}>
         {modalState && (
@@ -239,17 +314,34 @@ class ContactList extends Component {
           </div>
           <div className={style["container_header--right"]}>
             <label>Sort by:</label>
-            <select name="cars" id="cars">
-              <option value="volvo">Volvo</option>
-              <option value="saab">Saab</option>
-              <option value="opel">Opel</option>
-              <option value="audi">Audi</option>
+            <select
+              onChange={(e) => {
+                this.handleSortDropdown(e.currentTarget.value);
+              }}
+            >
+              <option value="fname">Name</option>
+              <option value="company">Company</option>
             </select>
           </div>
         </div>
         <div className={style["container_subheader"]}>
           <div style={{ position: "relative", width: "240px" }}>
-            <input type="text" placeholder="Search contacts" />
+            <input
+              onFocus={() => {
+                this.setState({ showDropDown: true });
+              }}
+              onBlur={() => {
+                this.setState({ showDropDown: false });
+              }}
+              type="text"
+              placeholder="Search contacts"
+              onChange={(e) => {
+                this.handleSearch(e.currentTarget.value);
+              }}
+            />
+            {showDropDown && (
+              <div className={style["dropdown_options"]}>{dropDownData}</div>
+            )}
             <span className={style["input_icon"]}>
               <Icon>search</Icon>
             </span>
@@ -264,7 +356,13 @@ class ContactList extends Component {
             </button>
           </div>
         </div>
-        <Table dbData={formattedData} tableData={tableTemplate} />
+        <div style={{ maxWidth: "700px" }}>
+          <Table
+            sortOrder={sortOrder}
+            dbData={formattedData}
+            tableData={tableTemplate}
+          />
+        </div>
       </div>
     ) : (
       <div>Loading...</div>
