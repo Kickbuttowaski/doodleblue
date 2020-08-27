@@ -3,7 +3,8 @@ import style from "./DetailView.module.css";
 import Avatar from "./../Avatar/Avatar";
 import Icon from "@material-ui/core/Icon";
 import { addressBuilder } from "../../utils";
-const DetailView = ({ show, data, handleClose }) => {
+
+const DetailView = ({ show = false, data, handleClose }) => {
   let showView = show ? style.container : style.container_hide;
   return (
     <div className={showView}>
@@ -14,9 +15,9 @@ const DetailView = ({ show, data, handleClose }) => {
         className={style["modal--close"]}
       >
         <Icon>close</Icon>
-      </span>
+      </span>{" "}
       <div className={style["detail_avatar"]}>
-        <Avatar text={data.first_name} size="84px" />
+        <Avatar text={data.first_name + " " + data.last_name} size="84px" />
       </div>
       <div className={style["detail_title"]}>
         {data.first_name + " " + data.last_name}
@@ -53,3 +54,17 @@ const DetailView = ({ show, data, handleClose }) => {
 };
 
 export default DetailView;
+
+DetailView.defaultProps = {
+  data: {
+    first_name: "Jake",
+    last_name: "Jake",
+    email: "jake@gmail.com",
+    phone: "9710644621",
+    company: "infosys",
+    address1: "sampel line 1",
+    address2: "sampel line 1",
+    city: "Chennai",
+    country: "India",
+  },
+};

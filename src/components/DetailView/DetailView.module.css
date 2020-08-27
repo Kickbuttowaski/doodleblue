@@ -1,20 +1,19 @@
 .container {
   width: 450px;
-  background: #efefef;
-  position: absolute;
-  right: 50px;
-  top: 145px;
-  transition: all 5s ease-in-out;
+  background: #f1f1f1;
+  position: fixed;
+  right: 400px;
+  top: 163px;
+  transition: right 0.5s ease-in-out;
   padding: 32px 24px;
 }
 .container_hide {
-  transition: all 2s ease-in-out;
+  transition: all 0.5s ease-in-out;
   width: 450px;
   background: #efefef;
-  position: absolute;
+  position: fixed;
   right: -500px;
-  top: 145px;
-  display: none;
+  top: 163px;
   padding: 32px 24px;
 }
 .detail_avatar {

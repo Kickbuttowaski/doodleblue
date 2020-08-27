@@ -19,7 +19,11 @@ class Avatar extends React.PureComponent {
   }
   returnNode() {
     const { text, size } = this.props;
-
+    let displayText = text.split(" ");
+    let formatedText =
+      displayText[0][0].toUpperCase() +
+        (displayText[1] && displayText[1][0].toUpperCase()) || "";
+    //console.log(text);
     return (
       <div
         className={style["avatar"]}
@@ -30,7 +34,7 @@ class Avatar extends React.PureComponent {
           lineHeight: size,
         }}
       >
-        {text[0].toUpperCase() + text[1].toUpperCase()}
+        {formatedText}
       </div>
     );
   }

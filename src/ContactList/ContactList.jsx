@@ -44,59 +44,58 @@ class ContactList extends Component {
     });
   };
   handleTableTemplate = (type) => {
-    console.log(type);
-    if (type === "edit") {
-      console.log("in");
-      this.tableTemplate = [
-        {
-          label: (
-            <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
-          ),
-          value: "checkbox",
-          width: "5%",
-        },
-        {
-          label: "Basic Info",
-          value: "fname",
-          width: "10%",
-        },
-        {
-          label: "Company",
-          value: "company",
-          width: "10%",
-        },
-      ];
-    } else {
-      this.tableTemplate = [
-        {
-          label: (
-            <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
-          ),
-          value: "checkbox",
-          width: "5%",
-        },
-        {
-          label: "Basic Info",
-          value: "fname",
-          width: "15%",
-        },
-        {
-          label: "Company",
-          value: "company",
-          width: "15%",
-        },
-        {
-          label: "",
-          value: "edit",
-          width: "5%",
-        },
-        {
-          label: "",
-          value: "delete",
-          width: "5%",
-        },
-      ];
-    }
+    // if (type === "edit") {
+    //   console.log("in");
+    //   this.tableTemplate = [
+    //     {
+    //       label: (
+    //         <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
+    //       ),
+    //       value: "checkbox",
+    //       width: "2%",
+    //     },
+    //     {
+    //       label: "Basic Info",
+    //       value: "fname",
+    //       width: "15%",
+    //     },
+    //     {
+    //       label: "Company",
+    //       value: "company",
+    //       width: "10%",
+    //     },
+    //   ];
+    // } else {
+    this.tableTemplate = [
+      {
+        label: (
+          <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
+        ),
+        value: "checkbox",
+        width: "5%",
+      },
+      {
+        label: "Basic Info",
+        value: "fname",
+        width: "20%",
+      },
+      {
+        label: "Company",
+        value: "company",
+        width: "15%",
+      },
+      {
+        label: "",
+        value: "edit",
+        width: "5%",
+      },
+      {
+        label: "",
+        value: "delete",
+        width: "5%",
+      },
+    ];
+    //}
   };
   renderDropDown = () => {
     const { dbData, contactIds, searchValue } = this.state;
@@ -116,6 +115,7 @@ class ContactList extends Component {
             <BasicInfo
               size="32px"
               fname={dbData[id].first_name}
+              lname={dbData[id].last_name}
               email={dbData[id].email}
             />
           </div>
@@ -270,16 +270,15 @@ class ContactList extends Component {
     }
     return loading ? (
       <div className={style["container"]}>
-        {showDetailView && (
-          <DetailView
-            data={dbData[this.selectedId]}
-            show={showDetailView}
-            handleClose={() => {
-              this.handleTableTemplate();
-              this.setState({ showDetailView: false });
-            }}
-          />
-        )}
+        <DetailView
+          data={dbData[this.selectedId]}
+          show={showDetailView}
+          handleClose={() => {
+            this.handleTableTemplate();
+            this.setState({ showDetailView: false });
+          }}
+        />
+
         {modalState && (
           <ContactModal
             handleContactModal={this.handleContactModal}
@@ -295,7 +294,7 @@ class ContactList extends Component {
                 <Icon style={{ fontSize: "32px" }}>contact_page</Icon>
               </div>
               <div>
-                <h2>Contacts</h2>
+                <label>Contacts</label>
                 <p>Welcome to flatCRM page</p>
               </div>
             </div>

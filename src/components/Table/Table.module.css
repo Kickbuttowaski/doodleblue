@@ -1,9 +1,10 @@
 .table_container th {
   height: 40px;
-  font-weight: 600;
 }
+
 .table_container thead {
   background: #f1f1f1;
+  display: table;
 }
 .table_container table {
   border-collapse: collapse;
@@ -16,6 +17,9 @@
 .table_container th {
   padding: 4px;
   text-align: left;
+  color: #adadad;
+  font-size: 14px;
+  font-weight: 500;
 }
 .table_container thead,
 tbody {
@@ -24,8 +28,26 @@ tbody {
   table-layout: fixed; */
   border-collapse: collapse;
 }
+.table_container tbody {
+  max-height: 290px;
+  overflow: scroll;
+  overflow-x: hidden;
+  display: block;
+}
+.table_container tbody::-webkit-scrollbar {
+  width: 5px;
+}
+.table_container tbody::-webkit-scrollbar-thumb {
+  background: #888;
+}
+.table_container tbody::-webkit-scrollbar-track {
+  background: #888;
+}
 .table_container tr {
   cursor: pointer;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
 }
 .table_container tr:hover {
   background: #e8ecef;

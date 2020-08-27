@@ -97,7 +97,11 @@ class ContactModal extends Component {
           </span>
           <div className={style["form_row"]}>
             <div style={{ width: "50%" }}>
-              <label className={style["form_label"]}>First Name</label>
+              <label
+                className={`${style["form_label"]}  ${style["form_label_mandatory"]}`}
+              >
+                First Name
+              </label>
               <input
                 type="text"
                 placeholder="Firstname"
@@ -124,7 +128,11 @@ class ContactModal extends Component {
           </div>
           <div className={style["form_row"]}>
             <div style={{ width: "100%" }}>
-              <label className={style["form_label"]}>Email</label>
+              <label
+                className={`${style["form_label"]}  ${style["form_label_mandatory"]}`}
+              >
+                Email
+              </label>
               <input
                 type="text"
                 placeholder="Email"
@@ -140,7 +148,11 @@ class ContactModal extends Component {
           </div>
           <div className={style["form_row"]}>
             <div style={{ width: "50%" }}>
-              <label className={style["form_label"]}>Phone</label>
+              <label
+                className={`${style["form_label"]}  ${style["form_label_mandatory"]}`}
+              >
+                Phone
+              </label>
               <input
                 type="text"
                 placeholder="Phone"
