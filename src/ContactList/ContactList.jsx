@@ -15,13 +15,13 @@ class ContactList extends Component {
     loading: false,
     modalState: false,
     contactIds: [],
-
     type: "create",
     searchValue: "",
-    showDropDown: false,
+    isOpen: false,
     sortOrder: { path: "fname", order: "asc" },
     showDetailView: false,
   };
+
   componentDidMount() {
     fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
       .then((res) => res.json())
@@ -32,40 +32,11 @@ class ContactList extends Component {
             contactIds: result.map((data) => data.id),
           },
           () => {
-            this.handleTableTemplate();
+            //this.handleTableTemplate();
             this.formatData();
           }
         );
       });
-  }
-  handleSearch = (data) => {
-    this.setState({
-      searchValue: data,
-    });
-  };
-  handleTableTemplate = (type) => {
-    // if (type === "edit") {
-    //   console.log("in");
-    //   this.tableTemplate = [
-    //     {
-    //       label: (
-    //         <Icon style={{ color: "#696969", cursor: "pointer" }}>add_box</Icon>
-    //       ),
-    //       value: "checkbox",
-    //       width: "2%",
-    //     },
-    //     {
-    //       label: "Basic Info",
-    //       value: "fname",
-    //       width: "15%",
-    //     },
-    //     {
-    //       label: "Company",
-    //       value: "company",
-    //       width: "10%",
-    //     },
-    //   ];
-    // } else {
     this.tableTemplate = [
       {
         label: (
@@ -95,9 +66,15 @@ class ContactList extends Component {
         width: "5%",
       },
     ];
-    //}
+  }
+  handleSearch = (data) => {
+    this.setState({
+      searchValue: data,
+    });
   };
+
   renderDropDown = () => {
+    //In real scenairo, post request is made for every character typed and based on response the content is generated. Mocking it here
     const { dbData, contactIds, searchValue } = this.state;
     let returnData = [];
     contactIds.forEach((id) => {
@@ -141,6 +118,7 @@ class ContactList extends Component {
     this.setState({ modalState: true, type: "edit" });
   };
   formatData = () => {
+    //Storing the data in {id:data..} format so that it would easy to get the required data based on id
     const { dbData, contactIds } = this.state;
     let formattedData = contactIds.map((ids) => {
       let data = dbData[ids];
@@ -209,6 +187,7 @@ class ContactList extends Component {
         this.formatData();
       });
     } else {
+      //In real case scenario the data will be posted and in response will get a ID, mocking it here.
       let newId = idGenerator(this.state.contactIds);
       let dbData = Object.assign({}, this.state.dbData, {
         [newId]: Object.assign(data, { id: newId }),
@@ -221,26 +200,27 @@ class ContactList extends Component {
     }
   };
   handleSortDropdown = (data) => {
-    const { sortOrder } = this.state;
+    var sortOrder = {
+      path: data,
+      order: "asc",
+    };
 
-    var newSortOrder = "";
-    if (sortOrder.path === data) {
-      newSortOrder = {
-        path: data,
-        order: sortOrder.order === "asc" ? "desc" : "asc",
-      };
-    } else {
-      newSortOrder = {
-        path: data,
-        order: "asc",
-      };
-    }
-    this.setState({ sortOrder: newSortOrder });
+    this.setState({ sortOrder });
   };
   handleRowData = (id) => {
     this.selectedId = id;
-    this.handleTableTemplate("edit");
+    //this.handleTableTemplate("edit");
     this.setState({ showDetailView: true });
+  };
+  showDropdownMenu = () => {
+    this.setState({ isOpen: !this.state.isOpen }, () =>
+      document.addEventListener("click", this.hideDropdownMenu)
+    );
+  };
+  hideDropdownMenu = () => {
+    this.setState({ isOpen: false }, () =>
+      document.removeEventListener("click", this.hideDropdownMenu)
+    );
   };
   render() {
     const {
@@ -249,7 +229,7 @@ class ContactList extends Component {
       loading,
       modalState,
       type,
-      showDropDown,
+      isOpen,
       searchValue,
       sortOrder,
       showDetailView,
@@ -270,15 +250,6 @@ class ContactList extends Component {
     }
     return loading ? (
       <div className={style["container"]}>
-        <DetailView
-          data={dbData[this.selectedId]}
-          show={showDetailView}
-          handleClose={() => {
-            this.handleTableTemplate();
-            this.setState({ showDetailView: false });
-          }}
-        />
-
         {modalState && (
           <ContactModal
             handleContactModal={this.handleContactModal}
@@ -313,19 +284,16 @@ class ContactList extends Component {
           <div className={style["container_subheader"]}>
             <div style={{ position: "relative", width: "240px" }}>
               <input
-                onFocus={() => {
-                  this.setState({ showDropDown: true });
-                }}
-                onBlur={() => {
-                  this.setState({ showDropDown: false });
-                }}
                 type="text"
                 placeholder="Search contacts"
+                onClick={() => {
+                  this.showDropdownMenu();
+                }}
                 onChange={(e) => {
                   this.handleSearch(e.currentTarget.value);
                 }}
               />
-              {searchValue.trim().length > 0 && (
+              {isOpen && (
                 <div className={style["dropdown_options"]}>{dropDownData}</div>
               )}
               <span className={style["input_icon"]}>
@@ -349,6 +317,15 @@ class ContactList extends Component {
             dbData={formattedData}
             tableData={this.tableTemplate}
             handleRowData={this.handleRowData}
+          />
+
+          <DetailView
+            data={dbData[this.selectedId]}
+            show={showDetailView}
+            handleClose={() => {
+              //this.handleTableTemplate();
+              this.setState({ showDetailView: false });
+            }}
           />
         </div>
       </div>

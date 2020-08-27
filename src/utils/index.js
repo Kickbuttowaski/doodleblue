@@ -86,7 +86,7 @@ export const addressBuilder = (addr1, addr2, city, country) => {
     let tempAddr1 = addr1.trim().length ? `${addr1}, ` : "";
     let tempAddr2 = addr2.trim().length ? `${addr2}, ` : "";
     let tempCity = city.trim().length ? `${city}, ` : "";
-    let tempCountry = country.trim() ? `${country}, ` : "";
-    return tempAddr1 + tempAddr2 + tempCity + tempCountry;
+    let tempCountry = country.trim() ? `${country} ` : "";
+    return tempAddr1 + tempAddr2 + tempCity + tempCountry +".";
   }
 };

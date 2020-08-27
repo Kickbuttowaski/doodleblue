@@ -23,7 +23,7 @@ class Avatar extends React.PureComponent {
     let formatedText =
       displayText[0][0].toUpperCase() +
         (displayText[1] && displayText[1][0].toUpperCase()) || "";
-    //console.log(text);
+
     return (
       <div
         className={style["avatar"]}

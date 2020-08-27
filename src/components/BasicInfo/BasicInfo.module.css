@@ -18,4 +18,8 @@
 .basicInfo_name {
   font-weight: 500;
   text-align: left;
+  white-space: nowrap;
+  width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

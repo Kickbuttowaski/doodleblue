@@ -9,7 +9,7 @@ const BasicInfo = ({ fname, lname, email, size = "48px" }) => {
         <Avatar text={fname[0] + " " + lname.trim()} size={size} />
       </div>
       <div style={{ width: "100%" }}>
-        <div className={style["basicInfo_name"]}>{fname}</div>
+        <div className={style["basicInfo_name"]}>{fname + " " + lname}</div>
         <div className={style["basicInfo_email"]}>{email}</div>
       </div>
     </div>

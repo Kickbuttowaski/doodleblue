@@ -65,10 +65,10 @@
   border: 0px;
   border-radius: 4px;
   color: #fff;
-  height: 32px;
+  /* height: 32px; */
   box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.06);
   font-size: 14px;
-  padding: 0px 8px;
+  padding: 8px;
   cursor: pointer;
 }
 .dropdown_options {
@@ -79,6 +79,7 @@
   box-shadow: 0px 10px 16px rgba(0, 0, 0, 0.1), 0px 4px 6px rgba(0, 0, 0, 0.06);
   border-radius: 4px;
   border: 1px solid #efefef;
+  z-index: 999;
 }
 .dropdown_options--message {
   font-size: 14px;
@@ -88,6 +89,9 @@
 .tabel_container {
   width: 100%;
   max-width: 600px;
+  position: relative;
+  /* display: flex;
+  flex-direction: row; */
 }
 .top_section {
   width: 100%;
