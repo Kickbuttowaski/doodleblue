@@ -10,7 +10,12 @@
 }
 .table_container td {
   padding: 4px;
-  text-align: center;
+  text-align: left;
+  padding-left: 10px;
+}
+.table_container th {
+  padding: 4px;
+  text-align: left;
 }
 .table_container thead,
 tbody {

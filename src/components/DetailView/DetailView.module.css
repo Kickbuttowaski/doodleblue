@@ -42,6 +42,7 @@
 .detail_field_data {
   font-size: 14px;
   font-weight: 500;
+  flex-basis: 60%;
 }
 .modal--close {
   position: absolute;

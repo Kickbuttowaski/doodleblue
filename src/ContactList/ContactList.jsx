@@ -58,12 +58,12 @@ class ContactList extends Component {
         {
           label: "Basic Info",
           value: "fname",
-          width: "15%",
+          width: "10%",
         },
         {
           label: "Company",
           value: "company",
-          width: "15%",
+          width: "10%",
         },
       ];
     } else {
@@ -159,7 +159,7 @@ class ContactList extends Component {
         lname: { value: data.last_name },
         email: data.email,
         phone: data.phone,
-        company: { value: data.company },
+        company: { value: data.company || "-" },
         address1: data.address1,
         address2: data.address2,
         city: data.city,

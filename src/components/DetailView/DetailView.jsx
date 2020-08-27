@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import style from "./DetailView.module.css";
 import Avatar from "./../Avatar/Avatar";
 import Icon from "@material-ui/core/Icon";
+import { addressBuilder } from "../../utils";
 const DetailView = ({ show, data, handleClose }) => {
   let showView = show ? style.container : style.container_hide;
   return (
@@ -34,11 +35,18 @@ const DetailView = ({ show, data, handleClose }) => {
       </div>
       <div className={style["detail_field"]}>
         <div className={style["detail_field_label"]}>Company:</div>
-        <div className={style["detail_field_data"]}>{data.company}</div>
+        <div className={style["detail_field_data"]}>{data.company || "-"}</div>
       </div>
       <div className={style["detail_field"]}>
         <div className={style["detail_field_label"]}>Address:</div>
-        <div className={style["detail_field_data"]}>{data.address1}</div>
+        <div className={style["detail_field_data"]}>
+          {addressBuilder(
+            data.address1,
+            data.address2,
+            data.city,
+            data.country
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import style from "./ContactModal.module.css";
 import Icon from "@material-ui/core/Icon";
-
+import { mailValidator } from "../../utils/index";
 class ContactModal extends Component {
   state = {
     payload: {
@@ -15,6 +15,11 @@ class ContactModal extends Component {
       city: "",
       country: "",
     },
+    error: {
+      first_name: null,
+      email: null,
+      phone: null,
+    },
   };
   componentDidMount() {
     const { data, type } = this.props;
@@ -22,16 +27,48 @@ class ContactModal extends Component {
       this.setState({ payload: Object.assign({}, this.state.payload, data) });
     }
   }
+  formValidator = () => {
+    const { first_name, email, phone } = this.state.payload;
+    let error = {
+      first_name: null,
+      email: null,
+      phone: null,
+    };
+    let flag = true;
+    if (first_name.trim().length === 0) {
+      error.first_name = "First name cannot be empty";
+      flag = false;
+    } else if (first_name.trim().length < 2) {
+      error.first_name = "First name should be atleast 2 characters";
+      flag = false;
+    }
+    if (
+      phone.toString().trim().length < 10 ||
+      phone.toString().trim().length > 10
+    ) {
+      error.phone = "Please enter a valid phone number";
+      flag = false;
+    }
+    if (!mailValidator(email)) {
+      error.email = "Please enter a valid valid email";
+      flag = false;
+    }
+    this.setState({ error: Object.assign({}, this.state.error, error) });
+    return flag;
+  };
   handleUserInput = (type, data) => {
     this.setState({
       payload: Object.assign({}, this.state.payload, { [type]: data }),
+      error: Object.assign({}, this.state.error, { [type]: null }),
     });
   };
 
   handleSubmit = () => {
     const { payload } = this.state;
     const { updateData, type = "create" } = this.props;
-    updateData(payload, type);
+    if (this.formValidator()) {
+      updateData(payload, type);
+    }
   };
   render() {
     const { handleContactModal, type } = this.props;
@@ -46,6 +83,7 @@ class ContactModal extends Component {
       city,
       country,
     } = this.state.payload;
+    const { error } = this.state;
     return (
       <div className={style["container"]}>
         <div className={style["modal"]}>
@@ -68,6 +106,9 @@ class ContactModal extends Component {
                   this.handleUserInput("first_name", e.currentTarget.value);
                 }}
               ></input>
+              {error.first_name && (
+                <p className={style["error_var"]}>{error.first_name}</p>
+              )}
             </div>
             <div style={{ width: "50%" }}>
               <label className={style["form_label"]}>Last Name</label>
@@ -92,6 +133,9 @@ class ContactModal extends Component {
                   this.handleUserInput("email", e.currentTarget.value);
                 }}
               ></input>
+              {error.email && (
+                <p className={style["error_var"]}>{error.email}</p>
+              )}
             </div>
           </div>
           <div className={style["form_row"]}>
@@ -105,6 +149,9 @@ class ContactModal extends Component {
                   this.handleUserInput("phone", e.currentTarget.value);
                 }}
               ></input>
+              {error.phone && (
+                <p className={style["error_var"]}>{error.phone}</p>
+              )}
             </div>
             <div style={{ width: "50%" }}>
               <label className={style["form_label"]}>Company</label>
