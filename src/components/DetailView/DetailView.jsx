@@ -8,7 +8,7 @@ const DetailView = ({ show = false, data, handleClose }) => {
   let showView = show ? style.container : style.container_hide;
   return (
     <div className={showView}>
-      <div>
+      <div className={style["subcontainer"]}>
         <span
           onClick={() => {
             handleClose();
@@ -52,6 +52,15 @@ const DetailView = ({ show = false, data, handleClose }) => {
             )}
           </div>
         </div>
+      </div>
+      <div className={style["subcontainer2"]}>
+        <div>
+          <Icon style={{ fontSize: "48px" }}>account_balance</Icon>
+        </div>
+        <div style={{ fontSize: "14px", fontWeight: "700" }}>
+          Tax evation & Pay notice
+        </div>
+        <div>...</div>
       </div>
     </div>
   );

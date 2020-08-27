@@ -58,7 +58,7 @@
 .input_icon {
   position: absolute;
   right: 5px;
-  bottom: 0px;
+  top: 4px;
 }
 .container_subheader button {
   background-image: linear-gradient(to right, #ff866e, #fb669f);
