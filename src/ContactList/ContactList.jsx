@@ -23,7 +23,7 @@ class ContactList extends Component {
   };
 
   componentDidMount() {
-    fetch("https://run.mocky.io/v3/f152ba0e-640b-4e5e-a8d9-98d276880146")
+    fetch("https://run.mocky.io/v3/67f48be9-8d09-454e-b682-ade577217f22")
       .then((res) => res.json())
       .then((result) => {
         this.setState(
