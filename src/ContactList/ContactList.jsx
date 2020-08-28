@@ -99,6 +99,19 @@ class ContactList extends Component {
         );
       }
     });
+    if (returnData.length <= 0 && searchValue.length > 0) {
+      returnData.push(
+        <div className={style["dropdown_options--message"]}>
+          Oops, No contact found
+        </div>
+      );
+    } else if (returnData.length <= 0) {
+      returnData.push(
+        <div className={style["dropdown_options--message"]}>
+          Type to start searching..
+        </div>
+      );
+    }
 
     return returnData;
   };
@@ -235,19 +248,7 @@ class ContactList extends Component {
       showDetailView,
     } = this.state;
     let dropDownData = this.renderDropDown();
-    if (dropDownData.length <= 0 && searchValue.length > 0) {
-      dropDownData = (
-        <div className={style["dropdown_options--message"]}>
-          Oops, No contact found
-        </div>
-      );
-    } else if (dropDownData.length <= 0) {
-      dropDownData = (
-        <div className={style["dropdown_options--message"]}>
-          Type to start searching..
-        </div>
-      );
-    }
+
     return loading ? (
       <div className={style["container"]}>
         {modalState && (
@@ -336,4 +337,3 @@ class ContactList extends Component {
 }
 
 export default ContactList;
-// style={{ width: "700px" }}
